@@ -2,27 +2,31 @@ Fallowing are the steps for user service in Todoapp
 
 #apt update
 
-#mkdir home
+#useradd -m -s /bin/bash app
 
-#cd /root/home/
+#cd /home/app/
 
 #git clone https://github.com/zelar-soft-todoapp/users.git
 
-#cd users/
-
 #apt update
 
-#apt install openjdk-8-jdkpdate
+#apt install openjdk-8-jre-headless
 
-#java -version
+#apt install openjdk-8-jdk-headless
+
+#export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
 #apt install maven -y
 
-#mvn package
+#cd /home/app/users/
 
-#cd target
+#mvn clean package
+   
+#cd target/
 
-#vi /etc/systemd/system/users.service
+#java -jar users-api-0.0.1.jar
+
+#vim /etc/systemd/service/users.service
 
 #systemctl daemon-reload
 
@@ -30,4 +34,22 @@ Fallowing are the steps for user service in Todoapp
 
 #systemctl enable users
 
-#systemctl status users
+#systemctl ststus users
+
+
+---------------------###############----------------
+systemD File for users.service
+
+systemd files ===  user.service files
+   
+[Unit]
+Description=users service
+
+[Service]
+User=app
+Environment=AUTH_API_PORT=REDIS_ENDPOINT
+ExecStart=/bin/java -jar /home/app/users/target/users-api-0.0.1.jar
+SyslogIdentifier=users
+
+[Install]
+WantedBy=multi-user.target
